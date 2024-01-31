@@ -1,12 +1,25 @@
 # WIP
-def move():
-    pass
+def instructions():
+    print("GAME INSTRUCTIONS:")
+
+def move(board):
+    isValidMove = False
+    while isValidMove == False:
+        temp = int(input('Please select a square [1-9] to move'))
+        if validateMove(board, temp):
+            return temp
+        else:
+            move(board)
+    # return temp 
 
 def validateMove(board, square):
     if square < 1 or square > 9:
         print("Invalid Move: Square selected is out of range. Try again!.")
+        return False
     if board[square] != '?':
-        print("Invalid Move: Square selected is already occupied. Try again!")  
+        print("Invalid Move: Square selected is already occupied. Try again!")   
+        return False
+    return True
 
 def updateActivePlayer(currentPlayer):
     # if currentPlayer == 1:
@@ -15,10 +28,24 @@ def updateActivePlayer(currentPlayer):
     #     return currentPlayer - 1
     return currentPlayer + 1 if currentPlayer == 1 else currentPlayer - 1
 
-def updatePlayerLastMoves(player):
-    pass
+def setBoard():
+    board = {
+        1:"?", 2:"?", 3:"?",
+        4:"?", 5:"?", 6:"?",
+        7:"?", 8:"?", 9:"?"
+    }
+    print(board)
+    return board
 
-def updateBoard(board, moves1, moves2):
+def updatePlayerLastMoves(player, move):
+    if len(player[player]) < 3:
+        player[player].append(move)
+    else:
+        elementRemoved = player[player].pop(0)
+        player[player].append(move)
+         
+
+def updatePlayer(board, moves1, moves2):
     for i in range(len(moves1)):
         board[moves1[i]] = "X"
         board[moves2[i]] = "O"
@@ -33,8 +60,9 @@ def isGameOver(currentPlayer):
         print("Winner Winner chiken dinner")
         return True
 
-def getWinner():
-    pass
+def getWinner(currentPlayer):
+    
+    print("Game Over, Player " + currentPlayer)
 
 def printBoard(board):    
     print("")
@@ -47,32 +75,22 @@ def printBoard(board):
 
 def main():
     print("Tic Tac Toe Game")
-    initialBoard = {
-        1:"?",
-        2:"?",
-        3:"?",
-        4:"?",
-        5:"?",
-        6:"?",
-        7:"?",
-        8:"?",
-        9:"?"
-    }
+    initialBoard = setBoard
     printBoard(initialBoard)
-    currentPlayer = 1
-    player1 = (3,8,6)
-    player2 = (1,5,9)
+    # currentPlayer = 1
+    # player1 = (3,8,6)
+    # player2 = (1,5,9)
     
-    currentBoard = updateBoard(initialBoard, player1, player2)
-    # print(currentBoard)
-    printBoard(currentBoard)
-    currentPlayer = updateActivePlayer(currentPlayer)
-    print(currentPlayer)
-    currentPlayer = updateActivePlayer(currentPlayer)
-    print(currentPlayer)
-    currentPlayer = updateActivePlayer(currentPlayer)
-    print(currentPlayer)
-    print(isGameOver(player2))
+    # currentBoard = updatePlayerLastMoves(initialBoard, player1, player2)
+    # # print(currentBoard)
+    # printBoard(currentBoard)
+    # currentPlayer = updateActivePlayer(currentPlayer)
+    # print(currentPlayer)
+    # currentPlayer = updateActivePlayer(currentPlayer)
+    # print(currentPlayer)
+    # currentPlayer = updateActivePlayer(currentPlayer)
+    # print(currentPlayer)
+    # print(isGameOver(player2))
     
 
 if __name__ == "__main__":
