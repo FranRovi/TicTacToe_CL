@@ -1,11 +1,21 @@
 # WIP
 def instructions():
-    print("GAME INSTRUCTIONS:")
+    return """TIC TAC TOE GAME
+        Game Instructions:
+        """
+
+def setStartingPlayer():
+    isStartingPlayerValid = False
+    while isStartingPlayerValid == False:
+        startingPlayer = int(input("Please enter the number (1 or 2) to select which player should start the game\n"))
+        if startingPlayer > 0 and startingPlayer < 3:
+            isStartingPlayerValid = True
+    return startingPlayer
 
 def move(board):
     isValidMove = False
     while isValidMove == False:
-        temp = int(input('Please select a square [1-9] to move'))
+        temp = int(input('Please select a square [1-9] to move\n'))
         if validateMove(board, temp):
             return temp
         else:
@@ -14,7 +24,7 @@ def move(board):
 
 def validateMove(board, square):
     if square < 1 or square > 9:
-        print("Invalid Move: Square selected is out of range. Try again!.")
+        print("Invalid Move: Square selected is out of range. Try again!")
         return False
     if board[square] != '?':
         print("Invalid Move: Square selected is already occupied. Try again!")   
@@ -34,15 +44,16 @@ def setBoard():
         4:"?", 5:"?", 6:"?",
         7:"?", 8:"?", 9:"?"
     }
-    print(board)
+
     return board
 
-def updatePlayerLastMoves(player, move):
-    if len(player[player]) < 3:
-        player[player].append(move)
+def updatePlayerLastMoves(board, activePlayer, move):
+    if len(activePlayer) < 3:
+        activePlayer.append(move)
     else:
-        elementRemoved = player[player].pop(0)
-        player[player].append(move)
+        elementRemoved = activePlayer.pop(0)
+        board[elementRemoved] = '?'
+        activePlayer.append(move)
          
 
 def updatePlayer(board, moves1, moves2):
@@ -51,17 +62,22 @@ def updatePlayer(board, moves1, moves2):
         board[moves2[i]] = "O"
     return board
 
-def isGameOver(currentPlayer):
+def isGameOver(currentPlayerMoves):
     winningMoves = [
-        (1,2,3),(4,5,6),(7,8,9),(1,4,7),
-        (2,5,8),(3,6,9),(3,5,7),(1,5,9),
+        {1,2,3},{4,5,6},{7,8,9},{1,4,7},
+        {2,5,8},{3,6,9},{3,5,7},{1,5,9},
     ]
-    if currentPlayer in winningMoves:
+    # print(set(currentPlayerMoves))
+    # if set(currentPlayerMoves) in winningMoves:
+    # for i in range(len(winningMoves)):
+    #     if winningMoves[i] == set(currentPlayerMoves):
+    #         return True 
+    if set(currentPlayerMoves) in winningMoves:
         print("Winner Winner chiken dinner")
         return True
+    return False
 
 def getWinner(currentPlayer):
-    
     print("Game Over, Player " + currentPlayer)
 
 def printBoard(board):    
@@ -74,15 +90,29 @@ def printBoard(board):
     print("")
 
 def main():
-    print("Tic Tac Toe Game")
-    initialBoard = setBoard
+    print(instructions())
+    initialBoard = setBoard()
+    
     printBoard(initialBoard)
-    # currentPlayer = 1
-    # player1 = (3,8,6)
-    # player2 = (1,5,9)
+    player1 = []
+    player2 = []
+    currentPlayer = setStartingPlayer()
+    while isGameOver == False:
+        pass # COMPLETE HERE
+    # print(currentPlayer)
+    # player1 = [3,8,6]
+    # player2 = [5,1,9]
+    
     
     # currentBoard = updatePlayerLastMoves(initialBoard, player1, player2)
-    # # print(currentBoard)
+    
+    # currentBoard = {
+    #     1:"O", 2:"?", 3:"X",
+    #     4:"?", 5:"O", 6:"X",
+    #     7:"?", 8:"X", 9:"O"
+    # }
+
+
     # printBoard(currentBoard)
     # currentPlayer = updateActivePlayer(currentPlayer)
     # print(currentPlayer)
@@ -90,7 +120,21 @@ def main():
     # print(currentPlayer)
     # currentPlayer = updateActivePlayer(currentPlayer)
     # print(currentPlayer)
+    # print(isGameOver(player1))
     # print(isGameOver(player2))
+    # printBoard(currentBoard)
+    # move(currentBoard)
+    # printBoard(currentBoard)
+    # move(currentBoard)
+    # printBoard(currentBoard)
+    # move(currentBoard)
+    # printBoard(currentBoard)
+    # move(currentBoard)
+    # move(currentBoard)
+    # move(currentBoard)
+    
+
+    
     
 
 if __name__ == "__main__":
