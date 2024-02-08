@@ -1,4 +1,16 @@
 # WIP
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.lastMoves = ['?','?','?']
+        self.isActive = False
+        
+    def toggleIsActive(self):
+        if self.isActive == True:
+            self.isActive = False
+        else:
+            self.isActive = True
+
 def instructions():
     return """TIC TAC TOE GAME
         Game Instructions:
@@ -15,12 +27,12 @@ def setStartingPlayer():
 def move(board):
     isValidMove = False
     while isValidMove == False:
+        printBoard(board)
         temp = int(input('Please select a square [1-9] to move\n'))
         if validateMove(board, temp):
             return temp
         else:
             move(board)
-    # return temp 
 
 def validateMove(board, square):
     if square < 1 or square > 9:
@@ -31,12 +43,16 @@ def validateMove(board, square):
         return False
     return True
 
-def updateActivePlayer(currentPlayer):
-    # if currentPlayer == 1:
-    #     return currentPlayer + 1
-    # else:
-    #     return currentPlayer - 1
-    return currentPlayer + 1 if currentPlayer == 1 else currentPlayer - 1
+def updateActivePlayer(player1, player2):
+    if player1.isActive == False:
+        player1.toggleIsActive()
+        player2.toggleIsActive()
+        return player1
+    else:
+        player1.toggleIsActive()
+        player2.toggleIsActive()
+        return player2
+        
 
 def setBoard():
     board = {
@@ -44,41 +60,35 @@ def setBoard():
         4:"?", 5:"?", 6:"?",
         7:"?", 8:"?", 9:"?"
     }
-
     return board
 
-def updatePlayerLastMoves(board, activePlayer, move):
-    if len(activePlayer) < 3:
-        activePlayer.append(move)
+def updatePlayerLastMove(board, currentPlayer, move):
+    if len(currentPlayer.lastMoves) < 3:
+        currentPlayer.lastMoves.append(move)
     else:
-        elementRemoved = activePlayer.pop(0)
+        elementRemoved = currentPlayer.lastMoves.pop(0)
         board[elementRemoved] = '?'
-        activePlayer.append(move)
-         
+        currentPlayer.lastMoves.append(move)
 
-def updatePlayer(board, moves1, moves2):
-    for i in range(len(moves1)):
-        board[moves1[i]] = "X"
-        board[moves2[i]] = "O"
+def updateBoard(board, player1, player2):
+    for i in range(len(player1.lastMoves)):
+        board[player2.lastMoves[i]] = "O"
+    for j in range(len(player2.lastMoves)):
+        board[player1.lastMoves[j]] = "X"
     return board
 
-def isGameOver(currentPlayerMoves):
+def isGameOver(currentPlayer):
     winningMoves = [
         {1,2,3},{4,5,6},{7,8,9},{1,4,7},
         {2,5,8},{3,6,9},{3,5,7},{1,5,9},
     ]
-    # print(set(currentPlayerMoves))
-    # if set(currentPlayerMoves) in winningMoves:
-    # for i in range(len(winningMoves)):
-    #     if winningMoves[i] == set(currentPlayerMoves):
-    #         return True 
-    if set(currentPlayerMoves) in winningMoves:
+    if set(currentPlayer.lastMoves) in winningMoves:
         print("Winner Winner chiken dinner")
         return True
     return False
 
 def getWinner(currentPlayer):
-    print("Game Over, Player " + currentPlayer)
+    print("Game Over, " + currentPlayer.name + " is the winner")
 
 def printBoard(board):    
     print("")
@@ -91,51 +101,20 @@ def printBoard(board):
 
 def main():
     print(instructions())
-    initialBoard = setBoard()
-    
-    printBoard(initialBoard)
-    player1 = []
-    player2 = []
-    currentPlayer = setStartingPlayer()
-    while isGameOver == False:
-        pass # COMPLETE HERE
-    # print(currentPlayer)
-    # player1 = [3,8,6]
-    # player2 = [5,1,9]
-    
-    
-    # currentBoard = updatePlayerLastMoves(initialBoard, player1, player2)
-    
-    # currentBoard = {
-    #     1:"O", 2:"?", 3:"X",
-    #     4:"?", 5:"O", 6:"X",
-    #     7:"?", 8:"X", 9:"O"
-    # }
-
-
-    # printBoard(currentBoard)
-    # currentPlayer = updateActivePlayer(currentPlayer)
-    # print(currentPlayer)
-    # currentPlayer = updateActivePlayer(currentPlayer)
-    # print(currentPlayer)
-    # currentPlayer = updateActivePlayer(currentPlayer)
-    # print(currentPlayer)
-    # print(isGameOver(player1))
-    # print(isGameOver(player2))
-    # printBoard(currentBoard)
-    # move(currentBoard)
-    # printBoard(currentBoard)
-    # move(currentBoard)
-    # printBoard(currentBoard)
-    # move(currentBoard)
-    # printBoard(currentBoard)
-    # move(currentBoard)
-    # move(currentBoard)
-    # move(currentBoard)
-    
-
-    
-    
-
+    currentBoard = setBoard()
+    printBoard(currentBoard)
+    player1 = Player('player1')
+    player2 = Player('player2')
+    currentPlayer = player1 if setStartingPlayer() == 1 else player2
+    currentPlayer.toggleIsActive()
+    while isGameOver(currentPlayer) == False:
+        validMove = move(currentBoard)
+        updatePlayerLastMove(currentBoard, currentPlayer, validMove)
+        currentBoard = updateBoard(currentBoard, player1, player2)
+        if isGameOver(currentPlayer) == True:
+            getWinner(currentPlayer)
+            return
+        currentPlayer = updateActivePlayer(player1, player2)
+        printBoard(currentBoard)
 if __name__ == "__main__":
     main()
